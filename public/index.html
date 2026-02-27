@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Footable – League Table Timeline</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>⚽ Footable</h1>
+    <p class="subtitle">Animated league table timeline</p>
+  </header>
+
+  <!-- ── Season selector ────────────────────────────────────────────── -->
+  <section id="selector">
+    <div class="form-row">
+      <label for="tournamentSelect">League</label>
+      <select id="tournamentSelect" disabled>
+        <option value="">Loading…</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="stageSelect">Season</label>
+      <select id="stageSelect" disabled>
+        <option value="">— pick a league first —</option>
+      </select>
+    </div>
+    <button id="loadBtn" disabled>Load season</button>
+    <button id="demoBtn">▶ Demo season</button>
+  </section>
+
+  <!-- ── Loading progress ───────────────────────────────────────────── -->
+  <section id="loadingSection" class="hidden">
+    <p id="loadingMsg">Loading…</p>
+    <progress id="loadingBar" value="0" max="1"></progress>
+  </section>
+
+  <!-- ── Animation controls ─────────────────────────────────────────── -->
+  <section id="controls" class="hidden">
+    <button id="playBtn">▶ Play</button>
+    <button id="resetBtn">⟳ Reset</button>
+    <label>
+      Speed
+      <input type="range" id="speedSlider" min="0.25" max="8" step="0.25" value="1" />
+      <span id="speedLabel">1×</span>
+    </label>
+    <label>
+      Timeline
+      <input type="range" id="scrubber" min="0" max="1" step="0.001" value="0" />
+    </label>
+    <span id="matchInfo" class="match-info"></span>
+  </section>
+
+  <!-- ── League table ───────────────────────────────────────────────── -->
+  <section id="tableSection" class="hidden">
+    <h2 id="tableTitle">Standings</h2>
+    <div id="leagueTable">
+      <div class="table-header">
+        <div class="cell hdr">#</div>
+        <div class="cell hdr team-col">Team</div>
+        <div class="cell hdr" title="Played">P</div>
+        <div class="cell hdr" title="Won">W</div>
+        <div class="cell hdr" title="Drawn">D</div>
+        <div class="cell hdr" title="Lost">L</div>
+        <div class="cell hdr" title="Goals For">GF</div>
+        <div class="cell hdr" title="Goals Against">GA</div>
+        <div class="cell hdr" title="Goal Difference">GD</div>
+        <div class="cell hdr" title="Points">Pts</div>
+      </div>
+      <div id="tableBody"></div>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
