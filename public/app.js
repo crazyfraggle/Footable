@@ -78,12 +78,12 @@ tournamentSelect.addEventListener('change', async () => {
       stageSelect.innerHTML = '<option value="">No seasons</option>';
       return;
     }
-    // Sort stages descending by year / name
-    stages.sort((a, b) => String(b.name ?? b.id).localeCompare(String(a.name ?? a.id)));
+    // Sort stages descending by year (most recent first), then by name
+    stages.sort((a, b) => (b.year ?? 0) - (a.year ?? 0) || String(b.name ?? b.id).localeCompare(String(a.name ?? a.id)));
     for (const s of stages) {
       const opt = document.createElement('option');
       opt.value = s.id;
-      opt.textContent = s.name ?? `Stage ${s.id}`;
+      opt.textContent = s.year ? `${s.name ?? 'Season'} ${s.year}` : (s.name ?? `Stage ${s.id}`);
       stageSelect.appendChild(opt);
     }
     stageSelect.disabled = false;
