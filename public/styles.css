@@ -262,6 +262,7 @@ input[type="range"] {
 }
 
 #fixedBar #fixedRound { font-weight: 600; color: var(--text); }
+#fixedBar #fixedMinute { font-weight: 700; color: var(--accent); }
 
 body { padding-bottom: 3rem; }
 

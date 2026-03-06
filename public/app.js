@@ -25,6 +25,7 @@ const scrubber = document.getElementById('scrubber');
 const matchInfo = document.getElementById('matchInfo');
 const fixedBar = document.getElementById('fixedBar');
 const fixedRound = document.getElementById('fixedRound');
+const fixedMinute = document.getElementById('fixedMinute');
 const fixedProgress = document.getElementById('fixedProgress');
 
 // ── Application state ───────────────────────────────────────────────
@@ -423,6 +424,7 @@ function updateMatchInfo(vm) {
   }
   const total = timeline.matches.length;
   fixedRound.textContent = `Rd ${gi + 1} / ${timeline.groups.length}  ·  ${date}`;
+  fixedMinute.textContent = `${half} ${dispMin}'`;
   fixedProgress.textContent = `${played} / ${total} matches`;
 }
 
