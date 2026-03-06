@@ -246,3 +246,20 @@ input[type="range"] {
 /* GD coloring */
 .gd-pos { color: var(--green); }
 .gd-neg { color: #ef5350; }
+
+/* Live match highlight */
+.table-row.playing {
+  background: rgba(61, 139, 255, 0.07);
+  border-left: 2px solid var(--accent);
+}
+
+.live-badge {
+  font-size: .7rem;
+  font-weight: 700;
+  background: var(--accent2);
+  color: #fff;
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-left: 6px;
+  flex-shrink: 0;
+}

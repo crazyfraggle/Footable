@@ -186,6 +186,7 @@ function computeStandings(vm) {
   // Determine which groups are fully done and which is current
   const groupsDone = Math.floor(vm / VIRTUAL_MATCH_MINUTES);
   const minuteWithinGroup = vm % VIRTUAL_MATCH_MINUTES;
+  const liveScores = {}; // teamId -> score string e.g. "1–0"
 
   for (let gi = 0; gi < timeline.groups.length; gi++) {
     const group = timeline.groups[gi];
@@ -211,6 +212,8 @@ function computeStandings(vm) {
         // At minute < 120 a match is still "in progress": don't award points yet
         // (they'll be awarded when the group finishes, i.e. gi < groupsDone)
         applyGoalsOnly(stats, m, hs, as);
+        liveScores[m.homeTeamId] = `${hs}–${as}`;
+        liveScores[m.awayTeamId] = `${as}–${hs}`;
       }
     }
     // gi > groupsDone: not started yet
@@ -220,6 +223,7 @@ function computeStandings(vm) {
   const rows = Object.values(stats).map((s) => ({
     ...s,
     gd: s.gf - s.ga,
+    live: liveScores[s.id] ?? null,
   }));
   rows.sort((a, b) =>
     b.pts - a.pts ||
@@ -294,8 +298,8 @@ function renderTable(rows) {
         el.addEventListener('animationend', () => el.classList.remove('goal-flash'), { once: true });
       }
     }
-    // Set position class for gold / silver medal
-    el.className = `table-row ${i < 3 ? `pos-${i + 1}` : ''}`;
+    // Set position class for gold / silver medal, and live highlight
+    el.className = `table-row ${i < 3 ? `pos-${i + 1}` : ''} ${row.live != null ? 'playing' : ''}`.trim();
     el.style.top = `${i * rowHeight}px`;
 
     prevPositions[tid] = i;
@@ -311,9 +315,10 @@ function renderTable(rows) {
 }
 
 function rowHTML(pos, name, row, gdClass) {
+  const liveBadge = row.live != null ? `<span class="live-badge">${row.live}</span>` : '';
   return `
     <div class="cell"><span class="pos-badge">${pos}</span></div>
-    <div class="cell">${escHtml(name)}</div>
+    <div class="cell">${escHtml(name)}${liveBadge}</div>
     <div class="cell">${row.played}</div>
     <div class="cell">${row.w}</div>
     <div class="cell">${row.d}</div>
