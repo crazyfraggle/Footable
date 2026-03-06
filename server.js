@@ -355,7 +355,15 @@ app.get('/api/timeline', async (req, res) => {
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`Footable running on http://localhost:${PORT}`);
+    const { networkInterfaces } = require('os');
+    const nets = networkInterfaces();
+    const addrs = ['localhost'];
+    for (const iface of Object.values(nets)) {
+      for (const { family, internal, address } of iface) {
+        if (family === 'IPv4' && !internal) addrs.push(address);
+      }
+    }
+    addrs.forEach(a => console.log(`  http://${a}:${PORT}`));
   });
 }
 
