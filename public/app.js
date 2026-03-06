@@ -214,9 +214,7 @@ function computeStandings(vm) {
             else as++;
           }
         }
-        // At minute < 120 a match is still "in progress": don't award points yet
-        // (they'll be awarded when the group finishes, i.e. gi < groupsDone)
-        applyGoalsOnly(stats, m, hs, as);
+        applyMatchResult(stats, m, hs, as);
         liveScores[m.homeTeamId] = `${hs}–${as}`;
         liveScores[m.awayTeamId] = `${as}–${hs}`;
       }
@@ -250,14 +248,6 @@ function applyMatchResult(stats, m, hs, as) {
   else                { h.pts++; a.pts++; h.d++; a.d++; }
 }
 
-// During a live match only count goals (no points yet)
-function applyGoalsOnly(stats, m, hs, as) {
-  const h = stats[m.homeTeamId];
-  const a = stats[m.awayTeamId];
-  if (!h || !a) return;
-  h.gf += hs; h.ga += as;
-  a.gf += as; a.ga += hs;
-}
 
 // ── Table rendering ──────────────────────────────────────────────────
 let prevPositions = {}; // teamId → rowIndex
