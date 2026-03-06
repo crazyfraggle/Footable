@@ -52,10 +52,8 @@ const DAY = 24 * HOUR;
  * Determine whether a match's result is available (i.e. the match is finished).
  */
 function isCompleted(match) {
-  // matchStatusId 6 = fullTime in NIFS
-  if (match.matchStatusId !== undefined) return match.matchStatusId === 6;
-  const hs = match.result;
-  return hs && hs.homeScore90 !== null && hs.homeScore90 !== undefined;
+  const r = match.result;
+  return r != null && r.homeScore90 !== null && r.homeScore90 !== undefined;
 }
 
 /**
@@ -259,7 +257,8 @@ app.get('/api/demo', (req, res) => {
 app.get('/api/tournaments', async (req, res) => {
   try {
     const data = await cached('tournaments', DAY, () => nifs.getTournaments());
-    res.json(data);
+    const norwegian = data.filter((t) => t.country?.shortName === 'NOR');
+    res.json(norwegian);
   } catch (err) {
     res.status(502).json({ error: err.message });
   }
