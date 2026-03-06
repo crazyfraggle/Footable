@@ -63,25 +63,11 @@ function isCompleted(match) {
 function extractGoals(incidents, homeTeamId, awayTeamId) {
   if (!Array.isArray(incidents)) return [];
   return incidents
-    .filter((inc) => {
-      const t = String(inc.incidentTypeId ?? inc.type ?? '');
-      // NIFS incident type IDs: 1 = goal, 2 = own goal, others = cards/subs
-      return t === '1' || t === '2' || t === 'goal' || t === 'ownGoal';
-    })
+    .filter((inc) => inc.matchEventTypeId === 2) // 2 = goal
     .map((inc) => {
-      const minute = parseInt(inc.minute ?? inc.elapsedTime ?? 0, 10);
-      const isOwnGoal =
-        String(inc.incidentTypeId ?? inc.type ?? '') === '2' ||
-        String(inc.type ?? '').toLowerCase().includes('own');
-      // For own goals, the scoring team is the opponent of the team committing it
-      const rawTeamId = inc.teamId ?? inc.team?.id;
-      let teamId;
-      if (isOwnGoal) {
-        teamId = rawTeamId === homeTeamId ? awayTeamId : homeTeamId;
-      } else {
-        teamId = rawTeamId;
-      }
-      return { minute, isOwnGoal, teamId };
+      const minute = parseInt(inc.time ?? inc.minute ?? 0, 10);
+      const teamId = inc.team?.id ?? inc.teamId;
+      return { minute, teamId };
     })
     .filter((g) => g.minute >= 0 && g.minute <= 150)
     .sort((a, b) => a.minute - b.minute);
@@ -325,10 +311,13 @@ app.get('/api/timeline', async (req, res) => {
     for (let i = 0; i < completedMatches.length; i++) {
       const m = completedMatches[i];
       try {
-        const incidents = await cached(`incidents_${m.id}`, 30 * DAY, () =>
+        const raw = await cached(`incidents_${m.id}`, 30 * DAY, () =>
           nifs.getMatchIncidents(m.id)
         );
-        enriched.push({ ...m, incidents: Array.isArray(incidents) ? incidents : [] });
+        // API returns full match object; goals are in matchEvents
+        const incidents = Array.isArray(raw) ? raw :
+          (Array.isArray(raw?.matchEvents) ? raw.matchEvents : []);
+        enriched.push({ ...m, incidents });
       } catch {
         enriched.push({ ...m, incidents: [] });
       }
