@@ -266,6 +266,22 @@ input[type="range"] {
 
 body { padding-bottom: 3rem; }
 
+/* Narrow screens: hide W D L GF GA columns */
+@media (max-width: 480px) {
+  .table-header .cell:nth-child(4),
+  .table-header .cell:nth-child(5),
+  .table-header .cell:nth-child(6),
+  .table-header .cell:nth-child(7),
+  .table-header .cell:nth-child(8),
+  .table-row .cell:nth-child(4),
+  .table-row .cell:nth-child(5),
+  .table-row .cell:nth-child(6),
+  .table-row .cell:nth-child(7),
+  .table-row .cell:nth-child(8) {
+    display: none;
+  }
+}
+
 /* GD coloring */
 .gd-pos { color: var(--green); }
 .gd-neg { color: #ef5350; }
