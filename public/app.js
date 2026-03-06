@@ -23,6 +23,9 @@ const speedSlider = document.getElementById('speedSlider');
 const speedLabel = document.getElementById('speedLabel');
 const scrubber = document.getElementById('scrubber');
 const matchInfo = document.getElementById('matchInfo');
+const fixedBar = document.getElementById('fixedBar');
+const fixedRound = document.getElementById('fixedRound');
+const fixedProgress = document.getElementById('fixedProgress');
 
 // ── Application state ───────────────────────────────────────────────
 let timeline = null;    // { teams, matches, groups }
@@ -165,6 +168,7 @@ function initTimeline(data) {
   renderTable(computeStandings(0));
   controls.classList.remove('hidden');
   tableSection.classList.remove('hidden');
+  fixedBar.classList.remove('hidden');
 }
 
 // ── Standings calculator ─────────────────────────────────────────────
@@ -403,13 +407,23 @@ function updateMatchInfo(vm) {
   const gi = Math.min(Math.floor(vm / VIRTUAL_MATCH_MINUTES), timeline.groups.length - 1);
   const group = timeline.groups[gi];
   if (!group) { matchInfo.textContent = ''; return; }
-  // Show date and match minute
   const firstMatch = matchesById[group.matchIds[0]];
   const date = firstMatch ? firstMatch.timestamp.slice(0, 10) : '';
   const minInGroup = Math.min(Math.floor(vm % VIRTUAL_MATCH_MINUTES), 120);
   const half = minInGroup <= 60 ? '1st half' : '2nd half';
   const dispMin = minInGroup <= 60 ? minInGroup : minInGroup - 60;
-  matchInfo.textContent = `Round ${gi + 1} of ${timeline.groups.length}  ·  ${date}  ·  ${half} ${dispMin}'`;
+  const roundText = `Round ${gi + 1} of ${timeline.groups.length}  ·  ${date}  ·  ${half} ${dispMin}'`;
+  matchInfo.textContent = roundText;
+
+  // Count fully completed matches
+  const groupsDone = Math.floor(vm / VIRTUAL_MATCH_MINUTES);
+  let played = 0;
+  for (let i = 0; i < groupsDone && i < timeline.groups.length; i++) {
+    played += timeline.groups[i].matchIds.length;
+  }
+  const total = timeline.matches.length;
+  fixedRound.textContent = `Rd ${gi + 1} / ${timeline.groups.length}  ·  ${date}`;
+  fixedProgress.textContent = `${played} / ${total} matches`;
 }
 
 // ── Control event listeners ──────────────────────────────────────────

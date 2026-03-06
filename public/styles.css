@@ -243,6 +243,28 @@ input[type="range"] {
 /* Points column highlight */
 .pts-cell { font-weight: 700; color: var(--accent); }
 
+/* Fixed status bar */
+#fixedBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: .6rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .82rem;
+  color: var(--text-dim);
+  z-index: 100;
+  backdrop-filter: blur(6px);
+}
+
+#fixedBar #fixedRound { font-weight: 600; color: var(--text); }
+
+body { padding-bottom: 3rem; }
+
 /* GD coloring */
 .gd-pos { color: var(--green); }
 .gd-neg { color: #ef5350; }
