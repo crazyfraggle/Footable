@@ -286,6 +286,16 @@ body { padding-bottom: 3rem; }
 .gd-pos { color: var(--green); }
 .gd-neg { color: #ef5350; }
 
+/* Team highlight */
+.table-row { cursor: pointer; }
+.table-row.highlighted {
+  background: rgba(61, 139, 255, 0.18);
+  border-left: 3px solid var(--accent);
+}
+.table-row.dimmed {
+  opacity: 0.35;
+}
+
 /* Live match highlight */
 .table-row.playing {
   background: rgba(61, 139, 255, 0.07);

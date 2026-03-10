@@ -251,6 +251,22 @@ function applyMatchResult(stats, m, hs, as) {
 
 // ── Table rendering ──────────────────────────────────────────────────
 let prevPositions = {}; // teamId → rowIndex
+let highlightedTeamId = null; // teamId of highlighted team, or null
+
+tableBody.addEventListener('click', (e) => {
+  const row = e.target.closest('.table-row');
+  if (!row) return;
+  const tid = row.dataset.teamId;
+  highlightedTeamId = highlightedTeamId === tid ? null : tid;
+  applyHighlight();
+});
+
+function applyHighlight() {
+  for (const el of tableBody.querySelectorAll('.table-row')) {
+    el.classList.toggle('highlighted', el.dataset.teamId === highlightedTeamId);
+    el.classList.toggle('dimmed', highlightedTeamId !== null && el.dataset.teamId !== highlightedTeamId);
+  }
+}
 
 function renderTable(rows) {
   const tbody = tableBody;
@@ -307,6 +323,7 @@ function renderTable(rows) {
 
   // Size the tbody wrapper so it takes the right amount of space
   tbody.style.height = `${rows.length * rowHeight}px`;
+  applyHighlight();
 }
 
 function rowHTML(pos, name, row, gdClass) {
